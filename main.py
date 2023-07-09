@@ -15,4 +15,8 @@ gInput.send_keys(Keys.RETURN)
 
 moreBtn = driver.find_element(By.XPATH, '//*[@id="rso"]/div[2]/div/div/div[1]/div[5]/div/div[1]/a/div/span[1]')
 moreBtn.click()
+
+#websites = driver.find_elements_by_css_selector("[aria-label=Website]")
+#websites[0].click()
+
 time.sleep(60)
