@@ -36,7 +36,7 @@ for site in websites:
 
 for site in webLinks:
     driver.get(site)
-    time.sleep(1)
+    time.sleep(1.5)
     
     html = driver.find_element(By.TAG_NAME, 'html')
     html.send_keys(Keys.END)
