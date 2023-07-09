@@ -10,6 +10,6 @@ Automation of job tasks.
 5. ! Setup local environment - Type `python -m venv env`
 6. Activate the environment - Type `env\scripts\activate.bat`
 7. ! Install all required packages - Type `pip install -r requirements.txt`
-
+8. Run program - Type `python main.py`
 
 
