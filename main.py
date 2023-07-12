@@ -14,7 +14,10 @@ query = input("What would you like to search: ")
 
 f = open("emails.txt", "w")
 
-driver = webdriver.Chrome()
+options = webdriver.ChromeOptions()
+options.add_experimental_option('excludeSwitches', ['enable-logging'])
+
+driver = webdriver.Chrome(options=options)
 driver.get("https://www.google.com")
 
 
