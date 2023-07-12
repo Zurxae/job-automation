@@ -52,7 +52,8 @@ while isNext:
     websites = driver.find_elements(By.CSS_SELECTOR, "[aria-label='Website']")
 
     for site in websites:
-        webLinks.append(site.get_attribute('href'))
+        # webLinks.append(site.get_attribute('href'))
+        webLinks.append(site.text)
     
     try:
         nextBtn = driver.find_element(By.CSS_SELECTOR, "[jsname='db9cze']")
@@ -109,6 +110,7 @@ f.close()
 
 
 print(f'\n\n\nVisited {len(webLinks)} company websites.\n\n')
+print(f'Found emails: {len(emails)} / {len(webLinks)}\n\n')
 
 elapsed_time = time.time() - st
 print('Execution time:', time.strftime("%H:%M:%S", time.gmtime(elapsed_time)))
