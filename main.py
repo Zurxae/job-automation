@@ -109,7 +109,7 @@ for query in queryList:
             if (count % 20 == 0):
                 driver.close()
                 driver = webdriver.Chrome(options=options)
-                
+
             driver.get(site)
         except:
             continue
@@ -117,9 +117,12 @@ for query in queryList:
         count +=1
         time.sleep(1.5)
         
-        html = driver.find_element(By.TAG_NAME, 'html')
-        html.send_keys(Keys.END)
-        time.sleep(1)
+        try:
+            html = driver.find_element(By.TAG_NAME, 'html')
+            html.send_keys(Keys.END)
+            time.sleep(1)
+        except:
+            pass
 
         foundEmail = False
         
@@ -168,9 +171,12 @@ for query in queryList:
                 if contactBtnPressed:
                     time.sleep(1)
             
-                    html = driver.find_element(By.TAG_NAME, 'html')
-                    html.send_keys(Keys.END)
-                    time.sleep(.5)
+                    try:
+                        html = driver.find_element(By.TAG_NAME, 'html')
+                        html.send_keys(Keys.END)
+                        time.sleep(.5)
+                    except:
+                        pass
 
                     foundEmail = False
                     
@@ -201,9 +207,12 @@ for query in queryList:
                         driver.back()
                         time.sleep(1)
 
-                        html = driver.find_element(By.TAG_NAME, 'html')
-                        html.send_keys(Keys.END)
-                        time.sleep(.5)
+                        try:
+                            html = driver.find_element(By.TAG_NAME, 'html')
+                            html.send_keys(Keys.END)
+                            time.sleep(.5)
+                        except:
+                            pass
 
                     try:
                         facebookVisited = False
