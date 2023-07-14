@@ -103,12 +103,18 @@ for query in queryList:
     emails = []
     blackListEmails = ['example@gmail.com', 'info@email.com', 'email', 'Email', 'Email Us']
 
+    count = 0
     for site in webLinks:
         try:
+            if (count % 20 == 0):
+                driver.close()
+                driver = webdriver.Chrome(options=options)
+                
             driver.get(site)
         except:
             continue
         
+        count +=1
         time.sleep(1.5)
         
         html = driver.find_element(By.TAG_NAME, 'html')
