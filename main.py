@@ -133,12 +133,12 @@ try:
             count +=1
             time.sleep(1.5)
             
-            try:
-                html = driver.find_element(By.TAG_NAME, 'html')
-                html.send_keys(Keys.END)
-                time.sleep(1)
-            except:
-                pass
+            # try:
+            #     html = driver.find_element(By.TAG_NAME, 'html')
+            #     html.send_keys(Keys.END)
+            #     time.sleep(1)
+            # except:
+            #     pass
 
             foundEmail = False
             
@@ -186,12 +186,12 @@ try:
                     if contactBtnPressed:
                         time.sleep(1)
                 
-                        try:
-                            html = driver.find_element(By.TAG_NAME, 'html')
-                            html.send_keys(Keys.END)
-                            time.sleep(.5)
-                        except:
-                            pass
+                        # try:
+                        #     html = driver.find_element(By.TAG_NAME, 'html')
+                        #     html.send_keys(Keys.END)
+                        #     time.sleep(.5)
+                        # except:
+                        #     pass
 
                         foundEmail = False
                         
@@ -222,12 +222,12 @@ try:
                             driver.back()
                             time.sleep(1)
 
-                            try:
-                                html = driver.find_element(By.TAG_NAME, 'html')
-                                html.send_keys(Keys.END)
-                                time.sleep(.5)
-                            except:
-                                pass
+                            # try:
+                            #     html = driver.find_element(By.TAG_NAME, 'html')
+                            #     html.send_keys(Keys.END)
+                            #     time.sleep(.5)
+                            # except:
+                            #     pass
 
                         try:
                             facebookElem = driver.find_element(By.CSS_SELECTOR, "a[href^='https://www.facebook.com/']")
