@@ -217,31 +217,28 @@ for query in queryList:
                             pass
 
                     try:
-                        facebookVisited = False
-                        possibleFacebookList = driver.find_elements(By.TAG_NAME, 'a')
-                        for link in possibleFacebookList:
-                            if facebookVisited:
-                                break
-                            link = link.get_attribute('href')
-                            if 'facebook.com' in str(link):
-                                driver.get(link)
-                                time.sleep(1)
-                                closeBtn = driver.find_element(By.CSS_SELECTOR, "[aria-label='Close']")
-                                closeBtn.click()
-                                try:
-                                    emailElems = driver.find_elements(By.CSS_SELECTOR, '.x193iq5w.xeuugli.x13faqbe.x1vvkbs.x1xmvt09.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.xudqn12.x3x7a5m.x6prxxf.xvq8zen.xo1l8bm.xzsf02u.x1yc453h')
-                                    
-                                    for elem in emailElems:
-                                        email = elem.text
-                                        if (email[0] != '/') and ('@' in email) and ('.com' in email) and (email not in emails) and (email not in blackListEmails):
-                                            print(email)
-                                            emails.append(email)
-                                            fout.write(email + "\n")
-                                            foundEmail = True
-                                            break
-                                    facebookVisited = True
-                                except:
-                                    pass
+                        facebookElem = driver.find_element(By.CSS_SELECTOR, "a[href^='https://www.facebook.com/']")
+                        link = facebookElem.get_attribute('href')
+
+                        driver.get(link)
+                        time.sleep(1)
+                        
+                        closeBtn = driver.find_element(By.CSS_SELECTOR, "[aria-label='Close']")
+                        closeBtn.click()
+                        try:
+                            emailElems = driver.find_elements(By.CSS_SELECTOR, '.x193iq5w.xeuugli.x13faqbe.x1vvkbs.x1xmvt09.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.xudqn12.x3x7a5m.x6prxxf.xvq8zen.xo1l8bm.xzsf02u.x1yc453h')
+                            
+                            for elem in emailElems:
+                                email = elem.text
+                                if (email[0] != '/') and ('@' in email) and ('.com' in email) and (email not in emails) and (email not in blackListEmails):
+                                    print(email)
+                                    emails.append(email)
+                                    fout.write(email + "\n")
+                                    foundEmail = True
+                                    break
+                            facebookVisited = True
+                        except:
+                            pass
                         if not foundEmail:
                             print('no email found on website: ' + site)
                     except:
