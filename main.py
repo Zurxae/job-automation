@@ -161,8 +161,7 @@ for query in queryList:
                         try:
                             contactBtn = driver.find_element(By.PARTIAL_LINK_TEXT, "CONTACT")
                         except:
-                            print('no email found on website: ' + site)
-                            continue
+                            pass
                 
                 contactBtnPressed = False
                 try:
