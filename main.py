@@ -103,8 +103,13 @@ for query in queryList:
             isNext = False
         
 
-    emails = []
-    blackListEmails = ['example@gmail.com', 'info@email.com', 'email', 'Email', 'Email Us']
+    emails = {'example@gmail.com': 0,
+              'info@email.com': 0,
+              'email': 0,
+              'Email': 0,
+              'Email Us': 0,
+              }
+    
 
     count = 0
     for site in webLinks:
@@ -132,9 +137,9 @@ for query in queryList:
         try:
             emailElem = driver.find_element(By.PARTIAL_LINK_TEXT, "@")
             email = emailElem.text
-            if (email[0] != '/') and ('.com' in email) and (email not in emails) and (email not in blackListEmails):
+            if (email[0] != '/') and ('.com' in email) and (email not in emails.keys()):
                 print(email)
-                emails.append(email)
+                emails[email] = 1
                 fout.write(email + "\n")
                 foundEmail = True
 
@@ -145,9 +150,9 @@ for query in queryList:
             
             for re_match in re.finditer(EMAIL_REGEX, page_source):
                 email = re_match.group()
-                if (email[0] != '/') and ('.com' in email) and (email not in emails) and (email not in blackListEmails):
+                if (email[0] != '/') and ('.com' in email) and (email not in emails.keys()):
                     print(email)
-                    emails.append(email)
+                    emails[email] = 1
                     fout.write(email + "\n")
                     foundEmail = True
                 
@@ -185,9 +190,9 @@ for query in queryList:
                     try:
                         emailElem = driver.find_element(By.PARTIAL_LINK_TEXT, "@")
                         email = emailElem.text
-                        if (email[0] != '/') and ('.com' in email) and (email not in emails) and (email not in blackListEmails):
+                        if (email[0] != '/') and ('.com' in email) and (email not in emails.keys()):
                             print(email)
-                            emails.append(email)
+                            emails[email] = 1
                             fout.write(email + "\n")
                             foundEmail = True
 
@@ -198,9 +203,9 @@ for query in queryList:
                         
                         for re_match in re.finditer(EMAIL_REGEX, page_source):
                             email = re_match.group()
-                            if (email[0] != '/') and ('.com' in email) and (email not in emails) and (email not in blackListEmails):
+                            if (email[0] != '/') and ('.com' in email) and (email not in emails.keys()):
                                 print(email)
-                                emails.append(email)
+                                emails[email] = 1
                                 fout.write(email + "\n")
                                 foundEmail = True
 
@@ -222,7 +227,7 @@ for query in queryList:
 
                         driver.get(link)
                         time.sleep(1)
-                        
+
                         closeBtn = driver.find_element(By.CSS_SELECTOR, "[aria-label='Close']")
                         closeBtn.click()
                         try:
@@ -230,9 +235,9 @@ for query in queryList:
                             
                             for elem in emailElems:
                                 email = elem.text
-                                if (email[0] != '/') and ('@' in email) and ('.com' in email) and (email not in emails) and (email not in blackListEmails):
+                                if (email[0] != '/') and ('@' in email) and ('.com' in email) and (email not in emails.keys()):
                                     print(email)
-                                    emails.append(email)
+                                    emails[email] = 1
                                     fout.write(email + "\n")
                                     foundEmail = True
                                     break
