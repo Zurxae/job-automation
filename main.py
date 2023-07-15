@@ -55,9 +55,12 @@ for query in queryList:
     print(f'\n\nQuery: {query}\n')
     queryStartTime = time.time()
     driver.get("https://www.google.com")
+    time.sleep(1)
 
-
-    gInput = driver.find_element(By.XPATH, "//textarea[@title='Search']")
+    try:
+        gInput = driver.find_element(By.ID, "APjFqb")
+    except:
+        gInput = driver.find_element(By.CSS_SELECTOR, "textarea[title='Search']")
     gInput.send_keys(query)
     gInput.send_keys(Keys.RETURN)
 
