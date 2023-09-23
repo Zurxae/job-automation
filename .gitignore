@@ -1,4 +1,5 @@
 env
+__pycache__
 output.txt
 input.txt
 test.py

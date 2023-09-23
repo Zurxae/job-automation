@@ -1,265 +1,27 @@
 # Code Written By Steven Zhivov
 
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-# from selenium.webdriver.common.action_chains import ActionChains
 import time
-import re
-from implement import *
+from selenium import webdriver
+from implement import get_queries
+from implement import execute_queries
 
-EMAIL_REGEX = '''(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])'''
+INPUT_FILE = 'input.txt'
 OUTPUT_FILE = 'output.txt'
 
-
+# Program start time
 st = time.time()
 
+queryList = get_queries(input_file=INPUT_FILE)
 
-#fout = open("output.txt", "w")
-
-queryList = get_queries()
-
-
+# Create Chrome Driver instance
 options = webdriver.ChromeOptions()
 options.add_experimental_option('excludeSwitches', ['enable-logging'])
-
 driver = webdriver.Chrome(options=options)
 
-# To clear existing file or make new one
-with open(OUTPUT_FILE, 'w'):
-    pass
-
-for query in queryList:
-    with open(OUTPUT_FILE, 'a') as fout:
-        fout.write('-' * 70)
-        fout.write('\n\n')
-        fout.write(f'Query: {query}\n\n\n')
-    
-    print(f'\n\nQuery: {query}\n')
-    
-    queryStartTime = time.time()
-    driver.get("https://www.google.com")
-    time.sleep(1)
-
-    try:
-        gInput = driver.find_element(By.ID, "APjFqb")
-    except:
-        try:
-            gInput = driver.find_element(By.CSS_SELECTOR, "textarea[title='Search']")
-        except:
-            try:
-                gInput = driver.find_element(By.CSS_SELECTOR, "input[title='Search']")
-            except:
-                exit()
-                
-    gInput.send_keys(query)
-    gInput.send_keys(Keys.RETURN)
-
-
-    moreBtn = driver.find_element(By.LINK_TEXT, 'More businesses')
-    moreBtn.click()
-
-
-    ratingBtn = driver.find_element(By.CSS_SELECTOR, "[data-filter-type='RATING']")
-    ratingBtn.click()
-
-    rating_3_5 = driver.find_element(By.CSS_SELECTOR, "[data-filter-type='3_5_AND_UP']")
-    rating_3_5.click()
-    time.sleep(1)
-
-    driver.refresh()
-    time.sleep(1)
-
-
-
-
-
-    webLinks = []
-    isNext = True
-
-    while isNext:
-
-        websites = driver.find_elements(By.CSS_SELECTOR, "[aria-label='Website']")
-
-        for site in websites:
-            webLinks.append(site.get_attribute('href'))
-            
-        
-        try:
-            nextBtn = driver.find_element(By.CSS_SELECTOR, "[aria-label='Next']")
-            nextBtn.click()
-            time.sleep(1)
-
-        except:
-            isNext = False
-        
-
-    emails = {'example@gmail.com': 0,
-            'info@email.com': 0,
-            'email': 0,
-            'Email': 0,
-            'Email Us': 0,
-            }
-    
-
-    count = 0
-    for site in webLinks:
-        try:
-            if (count % 20 == 0):
-                driver.close()
-                driver = webdriver.Chrome(options=options)
-            print('before page load')
-            driver.get(site)
-            print('right after page load')
-        except:
-            continue
-        print('right before 1st step of operation')
-        count +=1
-        time.sleep(1.5)
-        print('after time.sleep()')
-        
-        # try:
-        #     html = driver.find_element(By.TAG_NAME, 'html')
-        #     html.send_keys(Keys.END)
-        #     time.sleep(1)
-        # except:
-        #     pass
-
-        foundEmail = False
-        
-        try:
-            print('before trying to find element')
-            emailElem = driver.find_element(By.PARTIAL_LINK_TEXT, "@")
-            print('after found element')
-            email = emailElem.text
-            if (email[0] != '/') and ('.com' in email) and (email not in emails.keys()):
-                print(email)
-                emails[email] = 1
-                fout.write(email + "\n")
-                foundEmail = True
-
-        except:
-            print('before trying to find element by page source')
-            page_source = driver.page_source
-            print('after getting page source')
-            
-            for re_match in re.finditer(EMAIL_REGEX, page_source):
-                email = re_match.group()
-                if (email[0] != '/') and ('.com' in email) and (email not in emails.keys()):
-                    print(email)
-                    emails[email] = 1
-                    fout.write(email + "\n")
-                    foundEmail = True
-            print('after getting email by page source')
-            if not foundEmail:
-                print('before trying to find contact button')
-                try:
-                    contactBtn = driver.find_element(By.PARTIAL_LINK_TEXT, "Contact")
-                except:
-                    # try:
-                    #     contactBtn = driver.find_element(By.PARTIAL_LINK_TEXT, "contact") 
-                    # except:
-                    #     try:
-                    #         contactBtn = driver.find_element(By.PARTIAL_LINK_TEXT, "CONTACT")
-                    #     except:
-                    #         pass
-                    pass
-                print('after contact button is maybe found')
-                contactBtnPressed = False
-                try:
-                    contactBtn.click()
-                    contactBtnPressed = True
-                except:
-                    pass
-
-                if contactBtnPressed:
-                    time.sleep(1)
-            
-                    # try:
-                    #     html = driver.find_element(By.TAG_NAME, 'html')
-                    #     html.send_keys(Keys.END)
-                    #     time.sleep(.5)
-                    # except:
-                    #     pass
-
-                    foundEmail = False
-                    
-                    try:
-                        emailElem = driver.find_element(By.PARTIAL_LINK_TEXT, "@")
-                        email = emailElem.text
-                        if (email[0] != '/') and ('.com' in email) and (email not in emails.keys()):
-                            print(email)
-                            emails[email] = 1
-                            fout.write(email + "\n")
-                            foundEmail = True
-
-                    except:
-                        
-                        page_source = driver.page_source
-
-                        
-                        for re_match in re.finditer(EMAIL_REGEX, page_source):
-                            email = re_match.group()
-                            if (email[0] != '/') and ('.com' in email) and (email not in emails.keys()):
-                                print(email)
-                                emails[email] = 1
-                                fout.write(email + "\n")
-                                foundEmail = True
-
-                if not foundEmail:
-                    if contactBtnPressed:
-                        driver.back()
-                        time.sleep(1)
-
-                        # try:
-                        #     html = driver.find_element(By.TAG_NAME, 'html')
-                        #     html.send_keys(Keys.END)
-                        #     time.sleep(.5)
-                        # except:
-                        #     pass
-
-                    try:
-                        facebookElem = driver.find_element(By.CSS_SELECTOR, "a[href^='https://www.facebook.com/']")
-                        link = facebookElem.get_attribute('href')
-
-                        driver.get(link)
-                        time.sleep(1)
-
-                        closeBtn = driver.find_element(By.CSS_SELECTOR, "[aria-label='Close']")
-                        closeBtn.click()
-                        try:
-                            emailElems = driver.find_elements(By.CSS_SELECTOR, '.x193iq5w.xeuugli.x13faqbe.x1vvkbs.x1xmvt09.x1lliihq.x1s928wv.xhkezso.x1gmr53x.x1cpjm7i.x1fgarty.x1943h6x.xudqn12.x3x7a5m.x6prxxf.xvq8zen.xo1l8bm.xzsf02u.x1yc453h')
-                            
-                            for elem in emailElems:
-                                email = elem.text
-                                if (email[0] != '/') and ('@' in email) and ('.com' in email) and (email not in emails.keys()):
-                                    print(email)
-                                    emails[email] = 1
-                                    fout.write(email + "\n")
-                                    foundEmail = True
-                                    break
-                            facebookVisited = True
-                        except:
-                            pass
-                        if not foundEmail:
-                            print('no email found on website: ' + site)
-                    except:
-                        print('no email found on website: ' + site)
-                        continue
-    
-    fout.write('\n\n')
-    fout.write('-' * 70)
-    fout.write('\n\n\n\n')
-
-    print(f'\n\n\nVisited {len(webLinks)} company websites.\n')
-    print(f'Found emails: {len(emails)} / {len(webLinks)}\n')                       
-
-    elapsed_time = time.time() - queryStartTime
-    print('Single Query Execution time:', time.strftime("%H:%M:%S", time.gmtime(elapsed_time)), '\n')
+execute_queries(driver, queryList=queryList, output_file=OUTPUT_FILE)
 
 
 driver.quit()
-fout.close()
 
 
 elapsed_time = time.time() - st
