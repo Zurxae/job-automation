@@ -2,8 +2,12 @@
 
 import time
 from selenium import webdriver
-from implement import get_queries
-from implement import execute_queries
+from implement import (
+    get_queries,
+    search_query,
+    get_web_links,
+    execute_query,
+)
 
 INPUT_FILE = 'input.txt'
 OUTPUT_FILE = 'output.txt'
@@ -18,7 +22,14 @@ options = webdriver.ChromeOptions()
 options.add_experimental_option('excludeSwitches', ['enable-logging'])
 driver = webdriver.Chrome(options=options)
 
-execute_queries(driver, queryList=queryList, output_file=OUTPUT_FILE)
+# To clear existing file or make new one
+with open(OUTPUT_FILE, 'w'):
+    pass
+
+for query in queryList:
+    search_query(driver=driver, query=query)
+    webLinks = get_web_links(driver=driver)
+    execute_query(query=query, webLinks=webLinks, output_file=OUTPUT_FILE)
 
 
 driver.quit()
