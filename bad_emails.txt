@@ -1,0 +1,9 @@
+user@domain.com
+example@email.com
+john@doe.com
+info@mysite.com
+hi@mystore.com
+example@youremail.com
+'your@email.com
+john.doe@example.com
+filler@godaddy.com
