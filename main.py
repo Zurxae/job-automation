@@ -43,5 +43,5 @@ elapsed_time = time.time() - st
 print('Total Execution time:', time.strftime("%H:%M:%S", time.gmtime(elapsed_time)))
 print(f'Total emails found: {total_emails}')
 with open(OUTPUT_FILE, 'a') as fout:
-    fout.write('Total Execution time:', time.strftime("%H:%M:%S", time.gmtime(elapsed_time)), '\n')
+    fout.write(f'Total Execution time: {time.strftime("%H:%M:%S", time.gmtime(elapsed_time))}\n')
     fout.write(f'Total emails found: {total_emails}')
